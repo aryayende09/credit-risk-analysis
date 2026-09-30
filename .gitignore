@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# Dataset files
+*.csv
+*.zip
+
+# Local/private files
+.env
+*.env
+temp code*
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
