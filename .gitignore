@@ -1,3 +1,4 @@
+
 # Python
 __pycache__/
 *.pyc
@@ -6,8 +7,10 @@ venv/
 env/
 
 # Dataset files
-*.csv
 *.zip
+
+# Keep generated model evaluation outputs
+!ML/outputs/*.csv
 
 # Local/private files
 .env
