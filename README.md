@@ -1,406 +1,316 @@
-# Credit Risk & Loan Default Analysis
+# CreditLens — Credit Risk & Loan Default Analysis
+
+An end-to-end data analytics and machine learning project that explores loan default patterns, evaluates classification models, and estimates loan default probability through an interactive Streamlit application.
 
 ## Project Overview
 
-This project analyzes loan and borrower data to identify patterns associated with loan defaults and explores how machine learning can help estimate default risk.
+CreditLens analyzes borrower information to understand patterns associated with loan defaults. The project combines SQL-based data cleaning and analysis, Python-based exploratory data analysis, machine learning, and an interactive web application.
 
-The project uses **MySQL, Python, Pandas, scikit-learn, and Power BI** to perform data cleaning, exploratory data analysis, risk analysis, model training, evaluation, and dashboard development.
+The objective is to demonstrate how data can be processed, analyzed, visualized, and used to build a predictive model.
 
-The objective is to understand how borrower characteristics and loan-related factors are associated with default risk, and to compare Logistic Regression and Random Forest models using classification metrics.
+**Project repository:** [Credit Risk Analysis on GitHub](https://github.com/aryayende09/credit-risk-analysis)
+
+**Live demo:** Coming soon — the application will be linked here after successful deployment.
+
+## Project Objectives
+
+- Clean and prepare loan applicant data using SQL.
+- Explore borrower characteristics and loan default patterns.
+- Compare Logistic Regression and Random Forest classification models.
+- Evaluate model performance using classification metrics.
+- Identify important features associated with model predictions.
+- Build an interactive Streamlit application for applicant-level risk assessment.
+- Maintain assessment history and export results to CSV.
+
+## Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| MySQL | Data cleaning, transformation, and SQL analysis |
+| Python | Data processing and machine learning |
+| Pandas | Data manipulation and analysis |
+| Matplotlib | Data visualization |
+| Scikit-learn | Model training and evaluation |
+| Joblib | Saving and loading trained models |
+| Streamlit | Interactive web application |
+| Power BI | Interactive business intelligence dashboard |
+| Git and GitHub | Version control and project hosting |
 
 ## Dataset
 
-The project uses the [Credit Risk Dataset on Kaggle](https://www.kaggle.com/datasets/laotse/credit-risk-dataset/data).
+The project uses the Credit Risk Dataset available on Kaggle.
 
-- Original records: 32,581
-- Original columns: 12
-- Final cleaned records: 32,411
-- Target variable: `loan_status`
+**Dataset source:** [Credit Risk Dataset — Kaggle](https://www.kaggle.com/datasets/laotse/credit-risk-dataset)
 
-Target variable:
-- `0` — No default
-- `1` — Default
+The original dataset contains 32,581 records and 12 columns describing borrower characteristics, loan details, and default status.
 
-### Main Variables
+### Important Features
 
-| Variable | Description |
+| Feature | Description |
 |---|---|
 | `person_age` | Borrower's age |
 | `person_income` | Annual income |
-| `person_home_ownership` | Home ownership status |
-| `person_emp_length` | Employment length |
+| `person_home_ownership` | Home ownership category |
+| `person_emp_length` | Employment length in years |
 | `loan_intent` | Purpose of the loan |
-| `loan_grade` | Loan risk grade |
+| `loan_grade` | Loan grade assigned in the source dataset |
 | `loan_amnt` | Loan amount |
 | `loan_int_rate` | Loan interest rate |
-| `loan_status` | Default status |
-| `loan_percent_income` | Loan amount as a percentage of income |
-| `cb_person_default_on_file` | Previous default history |
+| `loan_status` | Target variable indicating default status |
+| `loan_percent_income` | Loan amount relative to annual income |
+| `cb_person_default_on_file` | Historical default indicator |
 | `cb_person_cred_hist_length` | Length of credit history |
 
-## Tools and Technologies
+The target variable is `loan_status`:
 
-- MySQL
-- SQL
-- Python
-- Pandas and NumPy
-- Matplotlib
-- scikit-learn
-- SQLAlchemy
-- Power BI
-- DAX
-- Git and GitHub
+- `0` — No default
+- `1` — Default
 
 ## Project Workflow
 
-Raw Dataset → MySQL Import → SQL Data Cleaning and Validation → SQL Risk Analysis → Python EDA → Machine Learning → Power BI Dashboard → Insights and Findings
+### 1. SQL Data Cleaning and Analysis
 
-## Data Cleaning Using SQL
+MySQL is used to inspect and prepare the dataset before analysis.
 
-The raw dataset was imported into MySQL before cleaning so the original data could be inspected separately.
+The workflow includes:
 
-The following steps were performed:
+- Inspecting the raw dataset and column structure.
+- Identifying missing values and duplicate records.
+- Investigating suspicious values and potential data-quality issues.
+- Preparing a cleaned dataset for downstream analysis.
+- Performing SQL queries to explore loan and borrower patterns.
 
-- Checked the total number of records and missing values.
-- Identified duplicate records.
-- Investigated unrealistic age values.
-- Removed duplicate records and records with age values above 100.
-- Added a unique `loan_id`.
-- Handled missing employment length and interest rate values using median imputation.
-- Converted columns to appropriate numeric data types.
-- Performed final validation checks.
+The original dataset contains 32,581 records. After cleaning, the analysis dataset contains 32,411 records.
 
-The cleaned dataset was stored in the MySQL table `loans_cleaned`.
+### 2. Exploratory Data Analysis
 
-### Cleaning Results
+Python, Pandas, and Matplotlib are used to explore the cleaned data and understand its characteristics.
 
-| Metric | Result |
-|---|---:|
-| Original records | 32,581 |
-| Final cleaned records | 32,411 |
-| Original columns | 12 |
-| Final columns | 13 |
-| Missing employment length values after cleaning | 0 |
-| Missing interest rate values after cleaning | 0 |
-| Age range after cleaning | 20–94 |
+The analysis examines:
 
-The cleaning process removed duplicate records and five records with ages above 100. Missing employment length and interest rate values were filled using median values calculated from the dataset.
+- The distribution of default and non-default cases.
+- Borrower income, age, and employment characteristics.
+- Loan amounts and loan-to-income ratios.
+- Relationships between applicant characteristics and default status.
+- Patterns that may help explain the model's predictions.
 
-## SQL Analysis
+### 3. Machine Learning
 
-SQL was used to analyze default patterns across borrower and loan characteristics.
-
-Analysis included:
-
-- Overall default rate
-- Default rate by loan grade
-- Default rate by loan intent
-- Default rate by home ownership
-- Default rate by income group
-- Default rate by employment length
-- Default rate by age group
-- Default rate by previous default history
-- Default rate by credit history length
-- Average interest rate by default status
-- Average loan amount by default status
-- Average loan-to-income ratio by default status
-- Total defaulted loan exposure
-
-Three reusable SQL summary views were also created:
-
-- Overall Risk Summary
-- Grade Risk Summary
-- Income Risk Summary
-
-## Python Exploratory Data Analysis
-
-Python was used to load the cleaned dataset from MySQL into Pandas and perform exploratory analysis.
-
-### Analysis Performed
-
-- Dataset structure and data types
-- Missing-value verification
-- Default distribution and overall default rate
-- Loan grade and loan intent analysis
-- Income and employment group analysis
-- Previous default history analysis
-- Credit history and age group analysis
-- Loan amount and interest rate analysis
-- Loan-to-income ratio analysis
-
-### Visualizations Created
-
-1. Default Rate by Loan Grade
-2. Default Rate by Income Group
-3. Default Rate by Previous Default History
-4. Default Rate by Home Ownership
-5. Default Rate by Loan Intent
-6. Average Loan Amount by Loan Status
-7. Average Loan-to-Income Ratio by Loan Status
-8. Average Interest Rate by Loan Status
-
-## Machine Learning
-
-The project was extended to compare two classification models for estimating whether a loan will default:
+Two classification models were trained and compared:
 
 - Logistic Regression
 - Random Forest Classifier
 
-The models were built using scikit-learn and trained on the cleaned dataset loaded from MySQL.
+The dataset was divided into training, validation, and test subsets using a 60/20/20 split and `random_state=42`.
 
-### Feature Selection
+The validation data was used for model-selection and threshold-selection decisions. The reported test metrics are from the project experiments; the test data has already been inspected during development.
 
-The models use nine features intended to be available before a loan approval decision.
+### 4. Model Evaluation
 
-**Numeric features**
-- `person_age`
-- `person_income`
-- `person_emp_length`
-- `loan_amnt`
-- `loan_percent_income`
-- `cb_person_cred_hist_length`
+The models were evaluated using:
 
-**Categorical features**
-- `person_home_ownership`
-- `loan_intent`
-- `cb_person_default_on_file`
+- Accuracy
+- Precision
+- Recall
+- F1-score
+- ROC-AUC
+- Average Precision
+- Confusion Matrix
 
-The target is `loan_status`.
+The project uses a classification threshold to convert the model's estimated probability into a predicted class.
 
-The unique identifier `loan_id` was excluded because it does not represent a meaningful borrower characteristic. `loan_grade` and `loan_int_rate` were also excluded from this version because they may be determined during the underwriting process. This is a modelling assumption that should be verified against the intended real-world prediction scenario.
+### 5. CreditLens Streamlit Application
 
-### Preprocessing
+The Streamlit app loads the saved Random Forest model and provides an interactive interface for assessing applicant profiles.
 
-The modelling pipeline includes:
+App features include:
 
-- Median imputation for missing numeric values
-- Standard scaling for numeric features
-- Most-frequent-value imputation for categorical features
-- One-hot encoding for categorical features
-- Stratified train, validation, and test splits
+- **Risk Assessment:** Enter applicant details and obtain an estimated default probability.
+- **Loan-to-Income Calculation:** Automatically calculate the loan amount as a proportion of annual income.
+- **Default Classification:** Display the model's predicted class using the selected classification threshold.
+- **Previous Applicant Assessments:** View assessments recorded during the active application session.
+- **CSV Export:** Download assessment records for further analysis.
+- **Model Insights:** Explore global permutation feature importance.
+- **Input Validation:** Check for inconsistent employment and credit-history lengths.
 
-The data was split into:
+The app is intended as a portfolio demonstration of a machine-learning workflow, not as a production lending system.
 
-| Dataset | Records |
+### 6. Power BI Dashboard
+
+A Power BI dashboard is included to present the project's credit-risk analysis visually.
+
+The dashboard file is located at:
+
+`Power BI/Credit_Risk_Analysis.pbix`
+
+Open the file using Power BI Desktop to explore the dashboard.
+
+## Model Results
+
+The following are the reported Random Forest results from the project's test evaluation.
+
+| Metric | Random Forest |
 |---|---:|
-| Training | 19,446 |
-| Validation | 6,482 |
-| Testing | 6,483 |
-| **Total** | **32,411** |
+| Accuracy | 86.41% |
+| Precision | 71.67% |
+| Recall | 62.62% |
+| F1-score | 66.84% |
+| ROC-AUC | 85.89% |
+| Average Precision | 76.40% |
 
-The validation set was used to compare decision thresholds. Final reported metrics were calculated on the test split.
+The Random Forest model achieved a higher F1-score and ROC-AUC than Logistic Regression in the recorded experiments.
 
-### Model Evaluation
+These results indicate that the model distinguishes between default and non-default cases, but its predictions are not perfect.
 
-Because the dataset contains more non-default loans than defaulted loans, accuracy alone is not sufficient to evaluate the models. Precision, recall, F1-score, ROC-AUC, and Average Precision were also considered.
+**Important:** These metrics are specific to the dataset and evaluation procedure used in this project. They do not guarantee performance on new applicants or real-world lending data.
 
-The decision threshold affects the balance between identifying defaulted loans and incorrectly flagging non-defaulted loans.
+## Feature Importance
 
-### Test Results
+Permutation feature importance was calculated using the validation data to understand which features most affected Random Forest performance.
 
-| Metric | Logistic Regression | Random Forest |
-|---|---:|---:|
-| Selected threshold | 0.40 | 0.50 |
-| Accuracy | 83.14% | 86.41% |
-| Precision | 65.34% | 71.67% |
-| Recall | 48.80% | 62.62% |
-| F1-score | 0.5587 | 0.6684 |
-| ROC-AUC | 0.8019 | 0.8589 |
-| Average Precision | 0.6299 | 0.7640 |
+The leading features in the recorded results were:
 
-**Initial comparison:** Random Forest performed better than Logistic Regression on the reported test metrics, including recall, F1-score, ROC-AUC, and Average Precision.
-
-At the selected threshold, Random Forest identified more defaulted loans while maintaining higher precision than Logistic Regression. The appropriate threshold would ultimately depend on the relative costs of missed defaults and false alerts.
-
-These results are experimental and should not be interpreted as evidence that the model is ready for real lending decisions.
-
-### Random Forest Feature Importance
-
-Permutation importance was calculated on the validation dataset using Average Precision as the scoring metric.
-
-| Feature | Importance |
+| Feature | Permutation Importance |
 |---|---:|
-| `loan_percent_income` | 0.2810 |
-| `person_home_ownership` | 0.2293 |
-| `person_income` | 0.1063 |
-| `cb_person_default_on_file` | 0.0658 |
-| `loan_intent` | 0.0601 |
-| `loan_amnt` | 0.0127 |
-| `person_emp_length` | 0.0111 |
-| `person_age` | 0.0040 |
-| `cb_person_cred_hist_length` | 0.0013 |
+| `loan_percent_income` | 0.28103 |
+| `person_home_ownership` | 0.22929 |
+| `person_income` | 0.10634 |
+| `cb_person_default_on_file` | 0.06576 |
+| `loan_intent` | 0.06008 |
 
-In this evaluation, `loan_percent_income` and `person_home_ownership` had the largest permutation importance values.
+The results suggest that loan-to-income ratio, home ownership, and income were particularly influential in the model's performance.
 
-Permutation importance measures how much model performance changes when a feature's values are shuffled. It describes the feature's contribution to this model's predictive performance; it does not establish causation.
+Permutation importance describes global model behavior. It does not explain every individual prediction, establish causation, or prove that a feature independently causes default.
 
-### Generated Machine Learning Outputs
-
-The script saves evaluation results under `ML/outputs/`:
-
-- `model_comparison.csv`
-- `validation_threshold_results.csv`
-- `random_forest_feature_importance.csv`
-- `logistic_regression_confusion_matrix.csv`
-- `random_forest_confusion_matrix.csv`
-
-These files make it easier to inspect the model comparison, threshold results, feature importance, and classification errors.
-
-## Power BI Dashboard
-
-The interactive dashboard was developed using Power BI.
-
-### Page 1 — Credit Risk Overview
-
-The overview page contains:
-
-- Total Loans
-- Total Amount at Risk
-- Default Rate
-- Average Interest Rate
-- Portfolio by Home Ownership
-- Default Rate by Loan Grade
-- Grade Summary
-
-### Page 2 — Risk Analysis
-
-The risk analysis page contains:
-
-- Loan Grade slicer
-- Loan Intent slicer
-- Home Ownership slicer
-- Income Group slicer
-- Loan Intent Breakdown
-- Loan-to-Income Ratio vs Default scatter plot
-- Average Loan Amount by Income Group
-
-The dashboard allows users to filter the portfolio and examine risk patterns across different segments.
-
-## Key Findings
-
-### Overall Risk
-
-| Metric | Result |
-|---|---:|
-| Total loans | 32,411 |
-| Defaulted loans | 7,089 |
-| Overall default rate | 21.87% |
-| Average loan amount | 9,593.59 |
-| Average interest rate | 11.01% |
-| Total defaulted loan exposure | 76,968,675 |
-
-### Default Rate by Loan Grade
-
-| Loan Grade | Default Rate |
-|---|---:|
-| A | 9.96% |
-| B | 16.32% |
-| C | 20.76% |
-| D | 59.06% |
-| E | 64.49% |
-| F | 70.54% |
-| G | 98.44% |
-
-Grade G has relatively few observations, so its high default rate should be interpreted cautiously.
-
-### Default Rate by Income Group
-
-| Income Group | Default Rate |
-|---|---:|
-| Low | 33.44% |
-| Medium | 15.43% |
-| High | 8.95% |
-
-Lower-income groups had higher observed default rates in this dataset. This is an association, not proof that income alone causes default.
-
-### Previous Default History
-
-| Previous Default on File | Default Rate |
-|---|---:|
-| Yes | 37.87% |
-| No | 18.44% |
-
-Borrowers with a previous default recorded had a higher observed default rate.
-
-### Loan-to-Income Ratio
-
-| Loan Status | Average Loan-to-Income Ratio |
-|---|---:|
-| Non-default | 14.88% |
-| Default | 24.69% |
-
-Defaulted loans had a higher average loan-to-income ratio in the cleaned dataset.
-
-### Interest Rate
-
-| Loan Status | Average Interest Rate |
-|---|---:|
-| Non-default | 10.49% |
-| Default | 12.88% |
-
-### Average Loan Amount
-
-| Loan Status | Average Loan Amount |
-|---|---:|
-| Non-default | 9,239.76 |
-| Default | 10,857.48 |
-
-## Limitations and Interpretation
-
-- The findings describe associations in the dataset and do not prove causation.
-- Some categories contain relatively few loans, making their default rates less stable.
-- The dataset represents historical loan records. It may not represent applicants who were rejected before a loan was issued, which can introduce selection bias.
-- The model's usefulness depends on whether all selected features are genuinely available at the time of the intended prediction.
-- The reported test results follow iterative experimentation. The test split has been inspected during earlier model and threshold experiments, so it should not be described as a completely untouched final test set.
-- Model performance may differ on new data, other lenders, or future economic conditions.
-- The models are educational experiments and are not validated for production lending decisions.
-
-## Project Structure
+## Repository Structure
 
 ```text
 credit-risk-analysis/
 ├── README.md
+├── app.py
 ├── SQL/
 │   └── data_cleaning_and_analysis.sql
 ├── Python/
 │   └── credit_risk_analysis.py
 ├── ML/
 │   ├── credit_risk_model.py
+│   ├── models/
+│   │   ├── logistic_regression.joblib
+│   │   └── random_forest.joblib
 │   └── outputs/
-│       ├── model_comparison.csv
-│       ├── validation_threshold_results.csv
-│       ├── random_forest_feature_importance.csv
 │       ├── logistic_regression_confusion_matrix.csv
-│       └── random_forest_confusion_matrix.csv
+│       ├── model_comparison.csv
+│       ├── random_forest_confusion_matrix.csv
+│       ├── random_forest_feature_importance.csv
+│       └── validation_threshold_results.csv
 ├── Power BI/
 │   └── Credit_Risk_Analysis.pbix
 └── Screenshots/
-    ├── 1st Dashboard.png
-    └── 2nd Dashboard.png
 ```
 
-## Conclusion
+The structure above describes the intended project layout. Some files or folders may be absent from a fresh GitHub checkout if they have not been committed.
 
-This project demonstrates an end-to-end data workflow, from SQL-based data cleaning and validation to exploratory analysis, interactive Power BI reporting, and introductory machine learning.
+## Installation and Setup
 
-The SQL analysis and dashboard identify patterns in historical loan defaults. The machine learning extension compares Logistic Regression and Random Forest and evaluates their ability to distinguish defaulted from non-defaulted loans.
+### Prerequisites
 
-Together, these components demonstrate practical skills in data preparation, analysis, visualization, classification, model evaluation, and communicating findings with appropriate limitations.
+Install the following:
 
-## Skills Demonstrated
+- Python 3.10 or a compatible version for the project's dependencies.
+- MySQL Server and MySQL Workbench for the SQL workflow.
+- Git, if you want to clone the repository.
+- Power BI Desktop to open the dashboard.
 
-- SQL data cleaning and aggregation
-- MySQL database querying
-- Data validation and duplicate detection
-- Missing-value handling and type conversion
-- Exploratory Data Analysis
-- Python and Pandas
-- NumPy and Matplotlib
-- Feature preprocessing and one-hot encoding
-- Logistic Regression and Random Forest
-- Classification metrics and threshold selection
-- Permutation feature importance
-- Power BI dashboard development
-- DAX measures and interactive filtering
-- Business-oriented interpretation of data
-- Git and GitHub project documentation
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/aryayende09/credit-risk-analysis.git
+cd credit-risk-analysis
+```
+
+### 2. Install Python Dependencies
+
+Create a virtual environment if desired, then install the packages listed in `requirements.txt`.
+
+```bash
+python -m venv .venv
+```
+
+Activate it on Windows:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Install the dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+The `requirements.txt` file must be included in the repository before using this installation command.
+
+### 3. Run the Streamlit Application
+
+From the project root, run:
+
+```bash
+python -m streamlit run app.py
+```
+
+Open the local URL displayed in the terminal, usually `http://localhost:8501`.
+
+The application loads the saved Random Forest model from:
+
+`ML/models/random_forest.joblib`
+
+The Model Insights tab reads the saved feature-importance output from:
+
+`ML/outputs/random_forest_feature_importance.csv`
+
+The saved model and its required files must be present for the application to run successfully.
+
+### 4. Run the Machine Learning Script
+
+To retrain and evaluate the models, run:
+
+```bash
+python ML/credit_risk_model.py
+```
+
+Review the script before running it to confirm that the database configuration, data source, and output paths match your local setup.
+
+The script may require access to the cleaned dataset or MySQL database used during development. Do not include database passwords or other credentials in the repository.
+
+## Limitations
+
+- The dataset is historical and may not represent current lending populations.
+- The model may make incorrect predictions.
+- The default threshold is a project setting and does not represent a real lender's policy.
+- Estimated probabilities are model outputs, not guarantees of default or repayment.
+- Feature importance describes model behavior, not causation.
+- Applicant assessment history is stored in the active Streamlit session and is not a permanent database.
+- The application has not been established as a production-grade or regulatory-compliant lending system.
+- Real lending decisions require appropriate validation, fairness testing, governance, privacy safeguards, and human oversight.
+
+## Future Improvements
+
+Potential future improvements include:
+
+- Deploying CreditLens as a public web application.
+- Adding a dedicated database for persistent assessment history.
+- Improving model monitoring and evaluation.
+- Adding individual prediction explanations after learning appropriate interpretability methods.
+- Improving chart readability and adding further analytical insights.
+- Testing model performance and fairness on additional datasets.
+
+## Author
+
+**Arya Yende**
+
+- GitHub: [aryayende09](https://github.com/aryayende09)
+- Project repository: [Credit Risk Analysis](https://github.com/aryayende09/credit-risk-analysis)
+
+---
+
+*CreditLens is an educational portfolio project demonstrating data analytics, SQL, machine learning, model evaluation, and application development.*
