@@ -186,12 +186,6 @@ Permutation importance describes global model behavior. It does not explain ever
 
 ```text
 credit-risk-analysis/
-├── README.md
-├── app.py
-├── SQL/
-│   └── data_cleaning_and_analysis.sql
-├── Python/
-│   └── credit_risk_analysis.py
 ├── ML/
 │   ├── credit_risk_model.py
 │   ├── models/
@@ -205,7 +199,17 @@ credit-risk-analysis/
 │       └── validation_threshold_results.csv
 ├── Power BI/
 │   └── Credit_Risk_Analysis.pbix
-└── Screenshots/
+├── Python/
+│   └── credit_risk_analysis.py
+├── Screenshots/
+│   ├── 1st Dashboard.png
+│   └── 2nd Dashboard.png
+├── SQL/
+│   └── data_cleaning_and_analysis.sql
+├── .gitignore
+├── app.py
+├── README.md
+└── requirements.txt
 ```
 
 The structure above describes the intended project layout. Some files or folders may be absent from a fresh GitHub checkout if they have not been committed.
