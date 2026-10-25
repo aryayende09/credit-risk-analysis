@@ -220,7 +220,7 @@ with tab_predict:
             submitted = st.form_submit_button(
                 "Estimate default risk  →",
                 type="primary",
-                use_container_width=True,
+                width="stretch",
             )
 
     if submitted:
@@ -344,7 +344,7 @@ with tab_predict:
                 st.dataframe(
                     pd.DataFrame([result["row"]]),
                     hide_index=True,
-                    use_container_width=True,
+                    width="stretch",
                 )
 
             export_record = {
@@ -358,7 +358,7 @@ with tab_predict:
                 pd.DataFrame([export_record]).to_csv(index=False).encode("utf-8-sig"),
                 "credit_risk_prediction.csv",
                 "text/csv; charset=utf-8",
-                use_container_width=True,
+                width="stretch",
             )
         else:
             st.markdown(
@@ -406,7 +406,7 @@ with tab_predict:
             ].map(lambda value: f"{value:.1%}")
 
         st.caption(f"{len(history_df)} successful assessment(s) in this session")
-        st.dataframe(display_df, hide_index=True, use_container_width=True)
+        st.dataframe(display_df, hide_index=True, width="stretch")
 
         history_csv = history_df.to_csv(index=False).encode("utf-8-sig")
         st.download_button(
@@ -414,7 +414,7 @@ with tab_predict:
             history_csv,
             "credit_risk_assessment_history.csv",
             "text/csv; charset=utf-8",
-            use_container_width=True,
+            width="stretch",
             key="download_assessment_history",
         )
 
@@ -503,7 +503,7 @@ with tab_insights:
                     # rounded white space seen in the previous version.
                     st.plotly_chart(
                         fig,
-                        use_container_width=True,
+                        width="stretch",
                         config={"displayModeBar": False},
                     )
 
@@ -524,7 +524,7 @@ with tab_insights:
                 st.dataframe(
                     importance_df.sort_values("Importance", ascending=False),
                     hide_index=True,
-                    use_container_width=True,
+                    width="stretch",
                 )
             else:
                 st.info(
