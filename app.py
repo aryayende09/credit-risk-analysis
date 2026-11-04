@@ -73,6 +73,21 @@ st.markdown(
     .stFormSubmitButton button {background: linear-gradient(100deg, #0f9f91, #4268ed) !important; color: white !important; border: 0 !important; border-radius: 12px !important; font-weight: 700 !important; min-height: 2.8rem;}
     .stButton button, .stDownloadButton button {border-radius: 12px !important; font-weight: 700 !important;}
     [data-testid="stMetric"] {background: white; border: 1px solid #e5ebf4; border-radius: 15px; padding: .8rem 1rem;}
+    .stApp:has(input[aria-label="Loan amount ($)"]:invalid) .st-key-prediction_output,
+    .stApp:has(input[min="500"]:invalid) .st-key-prediction_output,
+    div[data-testid="stHorizontalBlock"]:has(input[aria-label="Loan amount ($)"]:invalid) .st-key-prediction_output,
+    div[data-testid="stHorizontalBlock"]:has(input[min="500"]:invalid) .st-key-prediction_output {
+        display: none !important;
+    }
+    .st-key-prediction_fallback {
+        display: none;
+    }
+    .stApp:has(input[aria-label="Loan amount ($)"]:invalid) .st-key-prediction_fallback,
+    .stApp:has(input[min="500"]:invalid) .st-key-prediction_fallback,
+    div[data-testid="stHorizontalBlock"]:has(input[aria-label="Loan amount ($)"]:invalid) .st-key-prediction_fallback,
+    div[data-testid="stHorizontalBlock"]:has(input[min="500"]:invalid) .st-key-prediction_fallback {
+        display: block !important;
+    }
     .footer {text-align: center; color: #8995a7; font-size: .76rem; padding: 1.5rem 0 .4rem;}
     </style>
     """,
@@ -305,61 +320,73 @@ with tab_predict:
 
         result = st.session_state.get("prediction")
         if result:
-            probability = result["probability"]
-            is_default = result["outcome"] == 1
-            result_color = "#bd4035" if is_default else "#07876b"
-            pill_class = "red" if is_default else "green"
-            result_label = "Default" if is_default else "No Default"
-            explanation = (
-                "The model score is at or above the selected threshold. "
-                "This is a model classification, not a lending decision."
-                if is_default
-                else "The model score is below the selected threshold. "
-                "This does not guarantee future repayment."
-            )
+            with st.container(key="prediction_output"):
+                probability = result["probability"]
+                is_default = result["outcome"] == 1
+                result_color = "#bd4035" if is_default else "#07876b"
+                pill_class = "red" if is_default else "green"
+                result_label = "Default" if is_default else "No Default"
+                explanation = (
+                    "The model score is at or above the selected threshold. "
+                    "This is a model classification, not a lending decision."
+                    if is_default
+                    else "The model score is below the selected threshold. "
+                    "This does not guarantee future repayment."
+                )
 
-            st.markdown(
-                f"""
-                <div class="result">
-                  <div class="label">ESTIMATED PROBABILITY OF DEFAULT</div>
-                  <div class="prob" style="color:{result_color}">{probability:.1%}</div>
-                  <div style="height:9px;background:#edf1f7;border-radius:99px;overflow:hidden;margin:.8rem 0 1rem">
-                    <div style="height:9px;width:{probability * 100:.1f}%;background:linear-gradient(90deg,#13b99b,#4668f5);border-radius:99px"></div>
-                  </div>
-                  <span class="pill {pill_class}">Model prediction: {result_label}</span>
-                  <p class="muted" style="margin-top:1rem">{explanation}</p>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+                st.markdown(
+                    f"""
+                    <div class="result">
+                      <div class="label">ESTIMATED PROBABILITY OF DEFAULT</div>
+                      <div class="prob" style="color:{result_color}">{probability:.1%}</div>
+                      <div style="height:9px;background:#edf1f7;border-radius:99px;overflow:hidden;margin:.8rem 0 1rem">
+                        <div style="height:9px;width:{probability * 100:.1f}%;background:linear-gradient(90deg,#13b99b,#4668f5);border-radius:99px"></div>
+                      </div>
+                      <span class="pill {pill_class}">Model prediction: {result_label}</span>
+                      <p class="muted" style="margin-top:1rem">{explanation}</p>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
 
-            metric_left, metric_right = st.columns(2)
-            metric_left.metric("Threshold", f"{result['threshold']:.0%}")
-            metric_right.metric(
-                "Loan-to-income",
-                f"{result['row']['loan_percent_income']:.1%}",
-            )
+                metric_left, metric_right = st.columns(2)
+                metric_left.metric("Threshold", f"{result['threshold']:.0%}")
+                metric_right.metric(
+                    "Loan-to-income",
+                    f"{result['row']['loan_percent_income']:.1%}",
+                )
 
-            with st.expander("Review submitted applicant details"):
-                st.dataframe(
-                    pd.DataFrame([result["row"]]),
-                    hide_index=True,
+                with st.expander("Review submitted applicant details"):
+                    st.dataframe(
+                        pd.DataFrame([result["row"]]),
+                        hide_index=True,
+                        width="stretch",
+                    )
+
+                export_record = {
+                    **result["row"],
+                    "estimated_default_probability": probability,
+                    "predicted_class": result_label,
+                    "classification_threshold": result["threshold"],
+                }
+                st.download_button(
+                    "Download prediction summary (CSV)",
+                    pd.DataFrame([export_record]).to_csv(index=False).encode("utf-8-sig"),
+                    "credit_risk_prediction.csv",
+                    "text/csv; charset=utf-8",
                     width="stretch",
                 )
 
-            export_record = {
-                **result["row"],
-                "estimated_default_probability": probability,
-                "predicted_class": result_label,
-                "classification_threshold": result["threshold"],
-            }
-            st.download_button(
-                "Download prediction summary (CSV)",
-                pd.DataFrame([export_record]).to_csv(index=False).encode("utf-8-sig"),
-                "credit_risk_prediction.csv",
-                "text/csv; charset=utf-8",
-                width="stretch",
-            )
+            with st.container(key="prediction_fallback"):
+                st.markdown(
+                    '<div class="result" style="min-height:250px">'
+                    '<div style="font-size:2.3rem">◌</div>'
+                    '<h3>Ready when you are</h3>'
+                    '<p class="muted">Complete the applicant form and select '
+                    'Estimate default risk. Your result will appear here.</p>'
+                    '</div>',
+                    unsafe_allow_html=True,
+                )
         else:
             st.markdown(
                 '<div class="result" style="min-height:250px">'
