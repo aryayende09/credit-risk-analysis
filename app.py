@@ -13,7 +13,6 @@ st.set_page_config(
     page_icon="💠",
     layout="wide",
 )
-st.sidebar.caption("BUILD: CREDITLENS-VALIDATION-FIX-04NOV")
 
 ROOT = Path(__file__).resolve().parent
 MODEL_PATH = ROOT / "ML" / "models" / "random_forest.joblib"
